@@ -90,6 +90,11 @@ public class EmployeeController {
         return Result.success();//Result():向前端返回结果
     }
 
+    /**
+     * 员工分页查询
+     * @param employeePageQueryDTO
+     * @return
+     */
     @GetMapping("/page")//Get类型请求
     @ApiOperation(value = "员工分页查询")
     public Result<PageResult> page( EmployeePageQueryDTO employeePageQueryDTO){
@@ -98,4 +103,18 @@ public class EmployeeController {
         return Result.success(pageResult);
     }
 
+    /**
+     * 启用禁用员工账号
+     * @param status
+     * @param id
+     * @return
+     */
+    @PostMapping("/status/{status}")
+    @ApiOperation(value = "启用禁用员工账号")
+    //路径(path)参数 {status} :必用 @PathVariable ; json/query参数:不用 @PathVariable
+    public Result startOrStop(@PathVariable Integer status,Long id/* status:路径参数 */){
+        log.info("启用禁用员工账号:{},{}",status,id);
+        employeeService.startOrStop(status,id);
+        return Result.success();
+    }
 }

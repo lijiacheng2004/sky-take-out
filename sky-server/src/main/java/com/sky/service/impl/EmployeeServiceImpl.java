@@ -102,16 +102,40 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
         //select * from employee limit 0,10
-        //开始分页查询
+        // 开始分页查询
         PageHelper.startPage(employeePageQueryDTO.getPage(),employeePageQueryDTO.getPageSize());
-        //employeePageQueryDTO.getPage() 获取要查询的页码
-        //employeePageQueryDTO.getPageSize() 每页记录数
+        // employeePageQueryDTO.getPage() 获取要查询的页码
+        // employeePageQueryDTO.getPageSize() 每页记录数
 
-        Page<Employee> page=employeeMapper.pageQuery(employeePageQueryDTO);//调用mapper层的 pageQuery()分页查询方法
+        Page<Employee> page=employeeMapper.pageQuery(employeePageQueryDTO); // 调用mapper层的 pageQuery()分页查询方法
 
-        long total = page.getTotal();//获取总记录数
+        long total = page.getTotal();// 获取总记录数
         List<Employee> records = page.getResult();
 
-        return new PageResult(total,records);//返回PageResult对象
+        return new PageResult(total,records); // 返回PageResult对象
+    }
+
+    /**
+     * 启用禁用员工账号
+     * @param status
+     * @param id
+     */
+
+    public void startOrStop(Integer status, Long id) {
+        // update employee set status = ? where id = ?
+
+        /* 构建对象
+        方法一:
+        Employee employee = new Employee();
+        employee.setStatus(status);
+        employee.setUpdateTime(id);*/
+
+        // 方法二：
+        Employee employee = Employee.builder()
+                .status(status)
+                .id(id).
+                build();
+
+        employeeMapper.update(employee);
     }
 }
