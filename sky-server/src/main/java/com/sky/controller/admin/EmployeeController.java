@@ -1,5 +1,6 @@
 package com.sky.controller.admin;
 
+import com.google.j2objc.annotations.WeakOuter;
 import com.sky.constant.JwtClaimsConstant;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
@@ -41,7 +42,7 @@ public class EmployeeController {
      * @return
      */
     @PostMapping("/login")
-    @ApiOperation(value = "员工登录")//value标签
+    @ApiOperation(value = "员工登录")//value标签        //json格式参数,使用@RequestBody
     public Result<EmployeeLoginVO> login(@RequestBody EmployeeLoginDTO employeeLoginDTO) {
         log.info("员工登录：{}", employeeLoginDTO);
 
@@ -83,7 +84,7 @@ public class EmployeeController {
      */
     @PostMapping("")//Post类型请求
     @ApiOperation(value = "新增员工")
-    public Result<String> save(@RequestBody EmployeeDTO employeeDTO){
+    public Result<String> save(@RequestBody EmployeeDTO employeeDTO){//json格式参数,使用@RequestBody
         log.info("新增员工：{}",employeeDTO);//输出日志
         System.out.println("当前线程的id"+Thread.currentThread().getId());//获取当前线程的id
         employeeService.save(employeeDTO);//调用service层
@@ -115,6 +116,31 @@ public class EmployeeController {
     public Result startOrStop(@PathVariable Integer status,Long id/* status:路径参数 */){
         log.info("启用禁用员工账号:{},{}",status,id);
         employeeService.startOrStop(status,id);
+        return Result.success();
+    }
+
+    /**
+     * 根据id查询员工信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")//path路径参数 @PathVariable
+    @ApiOperation(value = "根据id查询员工信息")
+    public Result<Employee> getById(@PathVariable Long id){
+        Employee employee = employeeService.getById(id);
+        return Result.success(employee);
+    }
+
+    /**
+     * 编辑员工信息
+     * @param employeeDTO
+     * @return
+     */
+    @PutMapping()
+    @ApiOperation(value = "编辑员工信息")
+    public Result update(@RequestBody EmployeeDTO employeeDTO){//json格式参数,使用@RequestBody
+        log.info("编辑员工信息:{}",employeeDTO);
+        employeeService.update(employeeDTO);
         return Result.success();
     }
 }
